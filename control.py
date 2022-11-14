@@ -70,9 +70,9 @@ elif act=="checkoutCart":  # 將購物車內所有商品結帳
     if(shopping_mall.checkoutCart() == "ok!") :
         print("checkout success")
     elif (shopping_mall.checkoutCart() == "okk!"):
-        print("checkout successsssss")
+        print("checkout success")
     else:
-        print("no")
+        print("checkout failure")
 elif act=="getAllProductList":   # 查詢所有商品（主管看, 含商品數0）
     msgList = shopping_mall.getProductList() #get an array from model
     result = {

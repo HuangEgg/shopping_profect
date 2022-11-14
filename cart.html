@@ -83,7 +83,7 @@ function checkout() {
     .then(function(data){
         console.log("有")
         console.log(data);
-        let p="<p>更改狀態提醒：若為更改失敗，有可能為輸入錯誤數量或是庫存不足，請重新確認架上商品與您的購物車！！<br>更改狀態：";
+        let p="<p>更改狀態：";
         p += data;
         p += "</p>"
         let div=document.getElementById('changeState');

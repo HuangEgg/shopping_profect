@@ -125,11 +125,14 @@ def changeCart(id_to_change,count_to_change):  # 將購物車內商品更改 # �
         if(i["id"] == id_to_change):   # 若有我想購買的商品(id)   且   此商品架上有貨
             canBuyLimit = i["count"]   # 我最多可以買多少
     for j in cartData[0:len(cartData)-1]:
-        if(j["product_id"] == id_to_change):   # 此商品我之前購買過
-            IalreadyBuy = IalreadyBuy + j["product_count"]
-            if(j["checkout"] == "未結帳"):
-                InCartButNotCheck = True   # 確認我還有未結帳的賬目
-    if(InCartButNotCheck == False): # 沒有就提早拜拜↑
+        if (j["checkout"] == "未結帳"):
+            InCartButNotCheck = True   # 確認我還有未結帳的賬目，但也只能改未結帳啦
+        if(j["product_id"] == id_to_change and j["checkout"] == "已結帳，未出貨"):   # 此商品我之前購買過
+            IalreadyBuy = j["product_count"]
+    print("canBuyLimit:",canBuyLimit)
+    print("InCartButNotCheck:",InCartButNotCheck)
+    print("IalreadyBuy:",IalreadyBuy)
+    if(InCartButNotCheck == False): # 沒有我還沒結帳的賬目就提早拜拜↑
         return "no"
     if (count_to_change == 0): # 我要刪除這一個商品的未結帳的賬目
         sql="delete from `cart` where `product_id` = %s and `checkout`=0;"
@@ -153,6 +156,8 @@ def changeCart(id_to_change,count_to_change):  # 將購物車內商品更改 # �
 def checkoutCart():
     cartData = getCartList()  # 在 最後一欄[-1] 有購物車內<已結未結>的商品id
     duplicateItemID = (list(unique_everseen(duplicates(cartData[-1]))))  # 找尋重複的商品id  # 重複：已結與未結 
+    if (len(cartData[-1]) == 0):
+        return "no"
     if len(duplicateItemID) == 0: # 如果沒有重複的 # 代表所有商品都是第一次購買 # 直接全設結帳不用合併
         sql="update `cart` set `checkout`=1 where 1;"
         cur.execute(sql)
