@@ -30,7 +30,7 @@ if act=='updateProductList':  # 查看商品清單（顧客看, 不含商品數0
     msgList = shopping_mall.getProductList() #get an array from model
     newdata = []
     for i in range(len(msgList)-1):   # 只要給顧客看商品數>0的就好
-        if(msgList[i]["count"] != 0):
+        if(msgList[i]["count"] > 0):
             newdata.append(dict([("id",msgList[i]["id"]), ("name",msgList[i]["name"]), ("count",msgList[i]["count"]), ("description",msgList[i]["description"])])
     )
     result = {

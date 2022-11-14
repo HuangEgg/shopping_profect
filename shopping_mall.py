@@ -80,10 +80,8 @@ def addInCart(ProductID,ProductCount):  # 將商品加入購物車<顧客> # 防
     for j in cartData[0:len(cartData)-1]:
         if(j["product_id"] == ProductID):   # 若有我想購買的商品(id)   且   此商品我之前購買過
             InCartItemCount += j["product_count"]
-            print("checkout:",j["checkout"]) # 若有此商品，那此商品是否在車內有 “未結帳” 的商品
             if(j["checkout"] == "未結帳"):
                 inCartButNotCheckout = True
-    print("cOrNotC:",InCartItemCount)
     # 邏輯上 => 你買進的商品數量，不論你之前買不買過，大於商品目前庫存就不行
     ## 沒有大於：小於等於商品庫存，你再 => 檢查你之前有沒有買
     ##    1. 你沒買：可以直接買（因為你一開始檢查過你要買的數量已經可以買了）
