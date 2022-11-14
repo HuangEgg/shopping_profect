@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>cart page</title>
+<script>
+updateCartList() //  <!-- 一進來網頁的時候就刷新一下目前的商品頁面 ->
+function updateCartList(){
+    let action='updateCartList';
+    let mydat = new FormData();
+    mydat.append( "o", action);
+    fetch("control.py",{
+        method: 'POST',
+        body: mydat
+    })
+    .then(function(res){
+        //return res.text();
+        return res.json();
+    })
+    .then(function(data){
+        console.log(data)
+        list=data['list'];
+        console.log(list);
+        let p="";
+        for (item of list) {
+            p += "<p>商品編號：";
+            p += item.product_id;
+            p += "  商品名稱：";
+            p += item.product_name;
+            p += "  商品數量：";
+            p += item.product_count;
+            p += "  商品狀態：";
+            p += item.checkout;
+            p += "</p>";
+        }
+        let div=document.getElementById('cartList');
+        div.innerHTML=p;
+        
+    })
+}
+
+function change(id_pid,id_pcount) {
+    let pid=document.getElementById(id_pid).value;
+    let pcount=document.getElementById(id_pcount).value;
+    let mydat = new FormData();
+    action='changeCart';
+    mydat.append( "id", pid);
+    mydat.append( "count", pcount);
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有")
+        console.log(data);
+        let p="<p>更改狀態提醒：若為更改失敗，有可能為輸入錯誤數量或是庫存不足，請重新確認架上商品與您的購物車！！<br>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateCartList();
+    })
+}
+function checkout() {
+    let mydat = new FormData();
+    action='checkoutCart';
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有")
+        console.log(data);
+        let p="<p>更改狀態提醒：若為更改失敗，有可能為輸入錯誤數量或是庫存不足，請重新確認架上商品與您的購物車！！<br>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateCartList();
+    })
+}
+</script>
+</head>
+<body>
+<button onclick='updateCartList()'>刷新購物車頁面</button>
+<hr>
+您的購物車頁面
+<div class='myCSS' id='cartList'></div>
+<button onclick='checkout()'>結帳</button>
+<hr>
+輸入要調整的商品編號: <input type='text' id="pid" name='pid'>
+<br>
+<br>
+您希望購買多少數量（若不想購買可輸入 0）: <input type='text' id='pcount' name='pcount'>&nbsp;&nbsp;<input type='button' value='確認購買' onclick="change('pid','pcount')">
+<hr>
+<div class='myCSS' id='changeState'></div>
+<a href='product manu.html'>←←回商品頁</a><hr>
+</body>
+</html>
+

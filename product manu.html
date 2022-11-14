@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>shopping page</title>
+<script>
+updateProductList() //  <!-- 一進來網頁的時候就刷新一下目前的商品頁面 ->
+function updateProductList(){
+    let action='updateProductList';
+    let mydat = new FormData();
+    mydat.append( "o", action);
+    fetch("control.py",{
+        method: 'POST',
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        //return res.text();
+        return res.json();
+    })
+    .then(function(data){
+        //example of returning results as text
+        console.log(data)
+        list=data['list']; //the [] indexed format
+        console.log(list);
+        let p="";
+        for (item of list) {
+            p += "<p>商品編號：";
+            p += item.id;
+            p += "  商品名稱：";
+            p += item.name;
+            p += "  商品數量：";
+            p += item.count;
+            p += "  商品描述：";
+            p += item.description;
+            p += "</p>";
+        }
+        let div=document.getElementById('productsManu');
+        div.innerHTML=p;
+        
+    })
+}
+
+function buy(id_pid,id_pcount) {
+    let pid=document.getElementById(id_pid).value;
+    let pcount=document.getElementById(id_pcount).value;
+//    let pcount=document.getElementById(count).value;
+//    console.log(pid,id,pcount,count)
+    console.log(pid,id_pid)
+    console.log(pcount,id_pcount)
+    let mydat = new FormData();
+    action='addInCart';
+    mydat.append( "id", pid);
+    mydat.append( "count", pcount);
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log("res",res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有")
+        console.log("data=", data);
+        console.log(data);
+        let p="<p>";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('buyState');
+        div.innerHTML=p;
+        updateProductList();
+    })
+}
+</script>
+</head>
+<body>
+
+購物清單 <a href='cart.html'> 查看購物車 </a><hr>
+<button onclick='updateProductList()'>刷新商品頁面</button>
+<div class='myCSS' id='productsManu'></div>
+輸入要購買的商品編號: <input type='text' id="pid" name='pid'>
+<br>
+<br>
+輸入要購買的商品個數: <input type='text' id='pcount' name='pcount'>&nbsp;&nbsp;<input type='button' value='確認購買' onclick="buy('pid','pcount')">
+<hr>
+<div class='myCSS' id='buyState'></div>
+</body>
+</html>
+

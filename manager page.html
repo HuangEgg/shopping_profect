@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>manager page</title>
+<script>
+updateProductList() //  <!-- 一進來網頁的時候就刷新一下目前的商品頁面 ->
+function checkoutItemOff(){
+    let action='checkoutItemOff';
+    let mydat = new FormData();
+    mydat.append( "o", action);
+    fetch("control.py",{
+        method: 'POST',
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有跑進出貨已結賬")
+        console.log(data);
+        let p="<p>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateProductList() ;
+    })
+}
+function updateProductList(){
+    let action='getAllProductList';
+    let mydat = new FormData();
+    mydat.append( "o", action);
+    fetch("control.py",{
+        method: 'POST',
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        //return res.text();
+        return res.json();
+    })
+    .then(function(data){
+        //example of returning results as text
+        console.log(data)
+        list=data['list']; //the [] indexed format
+        console.log(list);
+        let p="";
+        for (item of list) {
+            p += "<p>&nbsp;&nbsp;商品編號：";
+            p += item.id;
+            p += "  商品名稱：";
+            p += item.name;
+            p += "  商品數量：";
+            p += item.count;
+            p += "  商品描述：";
+            p += item.description;
+            p += "</p>";
+        }
+        let div=document.getElementById('products');
+        div.innerHTML=p;
+        
+    })
+}
+function del(id_to_del){
+    let pid=document.getElementById(id_to_del).value;
+    let mydat = new FormData();
+    action='delPInpList';
+    mydat.append( "id", pid);
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有跑進刪除")
+        console.log(data);
+        let p="<p>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateProductList() ;
+    })
+}
+function insert(newName,newCount,newDes){
+    let pname=document.getElementById(newName).value;
+    let pcount=document.getElementById(newCount).value;
+    let pdes=document.getElementById(newDes).value;
+    let mydat = new FormData();
+    action='addProductInList';
+    console.log(pname)
+    console.log(pcount)
+    console.log(pdes)
+    mydat.append( "name", pname);
+    mydat.append( "count", pcount);
+    mydat.append( "describtion", pdes);
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有跑進新增商品")
+        console.log(data);
+        let p="<p>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateProductList() ;
+    })
+}
+function update(pid_to_change,newName,newCount,newDes){
+    let pid=document.getElementById(pid_to_change).value;
+    let pname=document.getElementById(newName).value;
+    let pcount=document.getElementById(newCount).value;
+    let pdes=document.getElementById(newDes).value;
+    let mydat = new FormData();
+    action='updateProductInList';
+    console.log(pname)
+    console.log(pcount)
+    console.log(pdes)
+    mydat.append( "id", pid);
+    mydat.append( "name", pname);
+    mydat.append( "count", pcount);
+    mydat.append( "describtion", pdes);
+    mydat.append( "o", action);
+    url="control.py";
+    fetch(url,{
+        method: 'POST', // or 'GET'
+        body: mydat
+    })
+    .then(function(res){
+        console.log(res);
+        return res.text();
+    })
+    .then(function(data){
+        console.log("有跑進新增商品")
+        console.log(data);
+        let p="<p>更改狀態：";
+        p += data;
+        p += "</p>"
+        let div=document.getElementById('changeState');
+        div.innerHTML=p;
+        updateProductList() ;
+    })
+}
+</script>
+</head>
+<body>&nbsp;&nbsp;
+<button onclick='updateProductList()'>刷新商品頁面</button>
+<button onclick='checkoutItemOff()'>將已結帳商品商品出貨</button>
+
+<hr>
+<p>&nbsp;目前商品詳細資訊</p><div class='myCSS' id='products'></div>
+<hr>
+
+<p>&nbsp;刪除商品</p>
+&nbsp;&nbsp;
+商品編號: <input type='text' id='delID' name='delID'>
+<input type='button' value='確認刪除商品' onclick="del('delID')">
+<br><hr>
+<p>&nbsp;新增商品</p>
+&nbsp;&nbsp;
+商品名稱: <input type='text' id='newName' name='newName'>
+&nbsp;&nbsp;
+商品數量: <input type='text' id='newCount' name='newCount'>
+&nbsp;&nbsp;
+商品介紹: <input type='text' id='newDes' name='newDes'>&nbsp;&nbsp;<input type='button' value='確認新增商品' onclick="insert('newName','newCount','newDes')">
+<br><hr>
+<p>&nbsp;調整商品資訊</p>
+&nbsp;&nbsp;
+調整說明：無輸入則不更動原本數值<br><br>
+&nbsp;&nbsp;
+請輸入要調整的商品編號: <input type='text' id='pid_c' name='pid_c' placeholder="商品編號本身不可更動">
+&nbsp;&nbsp;
+欲調整新名稱: <input type='text' id='updateName' name='updateName'>
+&nbsp;&nbsp;
+欲調整新數量: <input type='text' id='updateCount' name='updateCount'>
+&nbsp;&nbsp;
+欲調整新介紹: <input type='text' id='updateDes' name='updateDes'>&nbsp;&nbsp;<input type='button' value='確認調整商品資訊' onclick="update('pid_c','updateName','updateCount','updateDes')">
+<br><hr>
+
+<div class='myCSS' id='changeState'></div>
+
+<a href='product manu.html'>←←回商品頁</a><hr>
+</body>
+</html>
