@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2022 at 12:24 PM
+-- Generation Time: Nov 18, 2022 at 08:02 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -40,10 +40,8 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`pk`, `product_id`, `product_name`, `product_count`, `checkout`) VALUES
-(64, 2, 'dildo', 3, '1'),
-(65, 1, 'toy', 1, '1'),
-(66, 1, 'toy', 10, '0'),
-(67, 2, 'dildo', 5, '0');
+(68, 2, 'dildo', 2, '1'),
+(69, 14, 'egg', 20, '1');
 
 -- --------------------------------------------------------
 
@@ -63,10 +61,11 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `count`, `description`) VALUES
-(1, 'toy', 90, 'toy can play'),
-(2, 'dildo', 20, 'dildo can play more fun'),
-(4, 'marijuana', 0, 'smoke weed everyday'),
-(5, 'pen', 50, 'pen can write');
+(1, 'toy ', 555, 'toy can play'),
+(4, 'marijuana', 20, 'smoke weed everyday'),
+(5, 'pen', 52, 'pen can write'),
+(14, 'egg', 31, 'egg is egg'),
+(15, 'dildo', 12, 'dildo can play more fun');
 
 --
 -- Indexes for dumped tables
@@ -92,13 +91,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
