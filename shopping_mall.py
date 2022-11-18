@@ -31,13 +31,11 @@ def getCartList():
             item["checkout"] = "未結帳"
         elif (item["checkout"] == "1"):
            item["checkout"] = "已結帳，未出貨"
-        elif (item["checkout"] == "2"):
-            item["checkout"] = "已出貨"
     cartData.append(idInCart)
     return cartData
 
 def getProductList():  # 列出所有商品庫存<顧客 & 商場管理員>
-    sql="SELECT * FROM `products` ORDER BY `id`;" # 查詢所有商品 
+    sql="SELECT * FROM `products` ORDER BY `count` desc;" # 查詢所有商品 
     cur.execute(sql)   # 用 cur 執行
     records = cur.fetchall()   # 全部抓出來
     productData = []
@@ -129,10 +127,7 @@ def changeCart(id_to_change,count_to_change):  # 將購物車內商品更改 # �
             InCartButNotCheck = True   # 確認我還有未結帳的賬目，但也只能改未結帳啦
         if(j["product_id"] == id_to_change and j["checkout"] == "已結帳，未出貨"):   # 此商品我之前購買過
             IalreadyBuy = j["product_count"]
-    print("canBuyLimit:",canBuyLimit)
-    print("InCartButNotCheck:",InCartButNotCheck)
-    print("IalreadyBuy:",IalreadyBuy)
-    if(InCartButNotCheck == False): # 沒有我還沒結帳的賬目就提早拜拜↑
+    if((InCartButNotCheck == False) or (id_to_change not in cartData[-1])): # 沒有我還沒結帳的賬目就提早拜拜↑
         return "no"
     if (count_to_change == 0): # 我要刪除這一個商品的未結帳的賬目
         sql="delete from `cart` where `product_id` = %s and `checkout`=0;"
@@ -175,7 +170,7 @@ def checkoutCart():
             sql = "delete from `cart` where `checkout` = 0 and `product_id`=%s;"  # 刪除未結的那筆 （同此商品id）
             cur.execute(sql,(duplicateItemID[i],))
             conn.commit()
-        return "okk!"
+        return "ok!"
 
 
 

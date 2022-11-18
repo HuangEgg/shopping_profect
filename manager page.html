@@ -47,8 +47,13 @@ function updateProductList(){
         list=data['list']; //the [] indexed format
         console.log(list);
         let p="";
+        let color="";
         for (item of list) {
-            p += "<p>&nbsp;&nbsp;商品編號：";
+            color = "black"
+            if(item.count > 30 ){
+                color = "red"
+            }
+            p += "<font color="+color +">商品編號：";
             p += item.id;
             p += "  商品名稱：";
             p += item.name;
@@ -56,7 +61,7 @@ function updateProductList(){
             p += item.count;
             p += "  商品描述：";
             p += item.description;
-            p += "</p>";
+            p += "</font><br/>";
         }
         let div=document.getElementById('products');
         div.innerHTML=p;
